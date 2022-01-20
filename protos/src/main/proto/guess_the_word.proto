@@ -1,0 +1,51 @@
+syntax = "proto3";
+package com.oarunshiv.guess;
+option java_multiple_files = true;
+
+// GuessTheWord service definition.
+service GuessTheWord {
+  // Guess a five letter word.
+  rpc authenticate(AuthenticateRequest) returns (AuthenticateResponse) {}
+  rpc guess (GuessRequest) returns (GuessResponse) {}
+}
+
+message AuthenticateRequest {
+  string userId = 1;
+  string password = 2;
+}
+
+message AuthenticateResponse {
+  enum Status {
+    SUCCESS = 0;
+    AUTHENTICATION_ERROR = 1;
+    INVALID_USER = 2;
+  }
+  Status status = 1;
+  string sessionId = 2;
+  string exceptionMessage = 3;
+}
+
+// The request message containing the word user guessed.
+message GuessRequest {
+  string sessionId = 1;
+  string guess  = 2;
+}
+
+// The response message indicating the correctness of guessed word.
+message GuessResponse {
+  enum Status {
+    VALID_REQUEST = 0;
+    INPUT_WORD_SIZE_MISMATCH = 1;
+    NON_DICTIONARY_WORD = 2;
+  }
+  enum Color {
+    BLACK = 0;
+    YELLOW = 1;
+    GREEN = 2;
+  }
+  string sessionId = 1;
+  string guessed_word = 2;
+  Status status = 3;
+  repeated Color colors = 4;
+  string exception_message = 5;
+}
