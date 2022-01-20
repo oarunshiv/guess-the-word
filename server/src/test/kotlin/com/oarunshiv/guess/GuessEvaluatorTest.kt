@@ -1,6 +1,6 @@
 package com.oarunshiv.guess
 
-import com.oarunshiv.guess.GuessEvaluator.Companion.NON_DICTIONARY_WORD_MESSGAGE
+import com.oarunshiv.guess.GuessEvaluator.Companion.NON_DICTIONARY_WORD_MESSAGE
 import com.oarunshiv.guess.GuessEvaluator.Companion.SIZE_MISMATCH_MESSAGE
 import com.oarunshiv.guess.GuessResponse.Color
 import com.oarunshiv.guess.GuessResponse.Color.BLACK
@@ -37,7 +37,7 @@ class GuessEvaluatorTest : KoinTest {
         val invalidWord = "blahh"
         val invalidWordResponse = GuessResponse.newBuilder()
             .setStatus(GuessResponse.Status.NON_DICTIONARY_WORD)
-            .setExceptionMessage(invalidWord + NON_DICTIONARY_WORD_MESSGAGE)
+            .setExceptionMessage(invalidWord + NON_DICTIONARY_WORD_MESSAGE)
             .setGuessedWord(invalidWord)
             .build()
         val wordLengthMismatchResponse = GuessResponse.newBuilder()

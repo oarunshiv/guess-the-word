@@ -1,13 +1,12 @@
 package com.oarunshiv.guess
 
-import io.grpc.Status
 import io.grpc.Status.PERMISSION_DENIED
 import io.grpc.StatusException
 import java.security.MessageDigest
 import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
 
-class GuessTheWordGameService(
+class GuessTheWordService(
     private val guessEvaluator: GuessEvaluator,
     private val dictionary: Dictionary
 ) : GuessTheWordGrpcKt.GuessTheWordCoroutineImplBase() {

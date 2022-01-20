@@ -5,10 +5,7 @@ import com.google.protobuf.gradle.protobuf
 import com.google.protobuf.gradle.protoc
 
 plugins {
-    idea
     application
-    kotlin("jvm")
-    id("com.google.protobuf")
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
 
@@ -70,13 +67,6 @@ protobuf {
     }
 }
 
-idea {
-    module {
-        generatedSourceDirs.addAll(
-            listOf(
-                file("${protobuf.protobuf.generatedFilesBaseDir}/main/grpc"),
-                file("${protobuf.protobuf.generatedFilesBaseDir}/main/java")
-            )
-        )
-    }
+application {
+    mainClass.set("com.oarunshiv.guess.MainKt")
 }

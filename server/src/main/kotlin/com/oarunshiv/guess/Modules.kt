@@ -11,6 +11,6 @@ fun wordGuesserModule(dictionaryFile: String) = module {
 val applicationModule =
     module {
         single(named("portNumber")) { System.getenv("PORT")?.toInt() ?: 50051 }
-        single { GuessTheWordGameService(get(), get()) }
+        single { GuessTheWordService(get(), get()) }
         single { GuessTheWordServer() }
     }

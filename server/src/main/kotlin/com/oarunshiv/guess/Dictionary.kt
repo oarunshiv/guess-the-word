@@ -10,7 +10,4 @@ class Dictionary(dictionaryFile: String) {
 
     fun isValidWord(word: String) = word in validWords
     fun generateWord() = validWords.random()
-    fun printSize() {
-        println(validWords.size)
-    }
 }

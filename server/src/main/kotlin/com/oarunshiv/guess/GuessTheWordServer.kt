@@ -5,12 +5,11 @@ import io.grpc.ServerBuilder
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.component.inject
-import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 
 class GuessTheWordServer : KoinComponent {
     private val port: Int by inject(qualifier = named("portNumber"))
-    private val service: GuessTheWordGameService = get()
+    private val service: GuessTheWordService = get()
 
     private val server: Server = ServerBuilder
         .forPort(port)
@@ -36,15 +35,4 @@ class GuessTheWordServer : KoinComponent {
     fun blockUntilShutdown() {
         server.awaitTermination()
     }
-}
-
-fun main() {
-    val koin = startKoin {
-        printLogger()
-        modules(wordGuesserModule("five_letter_words.txt"), applicationModule)
-    }.koin
-
-    val server = koin.get<GuessTheWordServer>()
-    server.start()
-    server.blockUntilShutdown()
 }

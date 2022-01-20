@@ -1,11 +1,12 @@
 package com.oarunshiv.guess
+
 import com.oarunshiv.guess.GuessResponse.Color.BLACK
 import com.oarunshiv.guess.GuessResponse.Color.GREEN
 import com.oarunshiv.guess.GuessResponse.Color.YELLOW
 
 class GuessEvaluator(private val dictionary: Dictionary) {
     fun guess(actualWord: String, guessedWord: String): GuessResponse {
-        validateWord(actualWord, guessedWord).let { if (it != null) return it }
+        validateWord(actualWord, guessedWord).let { if (it != null) { return it } }
         val answer = mutableListOf(BLACK, BLACK, BLACK, BLACK, BLACK)
         val mappedWord = mutableMapOf<Char, MutableSet<Int>>()
         actualWord.forEachIndexed { i, c ->
@@ -26,33 +27,33 @@ class GuessEvaluator(private val dictionary: Dictionary) {
                 evaluatedChars.add(c)
             }
         }
-        return GuessResponse.newBuilder()
-            .setStatus(GuessResponse.Status.VALID_REQUEST)
-            .setGuessedWord(guessedWord)
-            .addAllColors(answer)
-            .build()
+        return guessResponse {
+            status = GuessResponse.Status.VALID_REQUEST
+            this.guessedWord = guessedWord
+            colors.addAll(answer)
+        }
     }
 
-    private fun validateWord(actualWord: String, guessedWord: String): GuessResponse? {
-        if (actualWord.length != guessedWord.length) {
-            return GuessResponse.newBuilder()
-                .setStatus(GuessResponse.Status.INPUT_WORD_SIZE_MISMATCH)
-                .setExceptionMessage(guessedWord + SIZE_MISMATCH_MESSAGE)
-                .setGuessedWord(guessedWord)
-                .build()
+    private fun validateWord(actual: String, guessed: String): GuessResponse? {
+        if (actual.length != guessed.length) {
+            return guessResponse {
+                status = GuessResponse.Status.INPUT_WORD_SIZE_MISMATCH
+                exceptionMessage = guessed + SIZE_MISMATCH_MESSAGE
+                guessedWord = guessed
+            }
         }
-        if (!dictionary.isValidWord(guessedWord)) {
-            return GuessResponse.newBuilder()
-                .setStatus(GuessResponse.Status.NON_DICTIONARY_WORD)
-                .setExceptionMessage(guessedWord + NON_DICTIONARY_WORD_MESSGAGE)
-                .setGuessedWord(guessedWord)
-                .build()
+        if (!dictionary.isValidWord(guessed)) {
+            return guessResponse {
+                status = GuessResponse.Status.NON_DICTIONARY_WORD
+                exceptionMessage = guessed + NON_DICTIONARY_WORD_MESSAGE
+                guessedWord = guessed
+            }
         }
         return null
     }
 
     companion object {
         internal const val SIZE_MISMATCH_MESSAGE = "'s size is incorrect."
-        internal const val NON_DICTIONARY_WORD_MESSGAGE = " is not a valid dictionary word."
+        internal const val NON_DICTIONARY_WORD_MESSAGE = " is not a valid dictionary word."
     }
 }

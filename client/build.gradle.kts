@@ -5,11 +5,7 @@ import com.google.protobuf.gradle.protobuf
 import com.google.protobuf.gradle.protoc
 
 plugins {
-    idea
     application
-    java
-    kotlin("jvm")
-    id("com.google.protobuf")
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
 
@@ -71,16 +67,5 @@ protobuf {
 }
 
 application {
-    mainClass.set("io.grpc.examples.helloworld.HelloWorldClientKt")
-}
-
-idea {
-    module {
-        generatedSourceDirs.addAll(
-            listOf(
-                file("${protobuf.protobuf.generatedFilesBaseDir}/main/grpc"),
-                file("${protobuf.protobuf.generatedFilesBaseDir}/main/java")
-            )
-        )
-    }
+    mainClass.set("com.oarunshiv.guess.client.MainKt")
 }
