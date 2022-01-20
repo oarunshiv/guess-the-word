@@ -3,7 +3,6 @@ package com.oarunshiv.guess
 import io.grpc.Status
 import io.grpc.Status.PERMISSION_DENIED
 import io.grpc.StatusException
-import kotlinx.coroutines.flow.Flow
 import java.security.MessageDigest
 import java.time.Instant
 import java.util.concurrent.ConcurrentHashMap
@@ -45,22 +44,9 @@ class GuessTheWordGameService(
     }
 
     override suspend fun guess(request: GuessRequest): GuessResponse {
-        val currentWord = "shire"//sessionIdMap[request.sessionId]
+        val currentWord = sessionIdMap[request.sessionId]
             ?: throw StatusException(PERMISSION_DENIED.withDescription("Invalid sessionid"))
         println("[Server] Using $currentWord for ${request.sessionId}")
         return guessEvaluator.guess(currentWord, request.guess).copy { sessionId = request.sessionId }
-    }
-
-    override fun guessGame(requests: Flow<GuessRequest>): Flow<GuessResponse> {
-//        requests.collect { request ->
-//            val notes: MutableList<RouteNote> = routeNotes.computeIfAbsent(note.location) {
-//                Collections.synchronizedList(mutableListOf<RouteNote>())
-//            }
-//            for (prevNote in notes.toTypedArray()) { // thread-safe snapshot
-//                emit(prevNote)
-//            }
-//            notes += note
-//        }
-        TODO()
     }
 }
