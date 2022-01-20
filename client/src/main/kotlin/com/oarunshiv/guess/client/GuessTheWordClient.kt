@@ -4,6 +4,7 @@ import com.oarunshiv.guess.AuthenticateResponse
 import com.oarunshiv.guess.GuessResponse
 import com.oarunshiv.guess.GuessTheWordGrpcKt
 import com.oarunshiv.guess.authenticateRequest
+import com.oarunshiv.guess.client.SampleWordGuesser
 import com.oarunshiv.guess.guessRequest
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
@@ -45,28 +46,5 @@ class GuessTheWordClient(private val channel: ManagedChannel) : Closeable {
 
     companion object {
         val logger = KotlinLogging.logger {}
-    }
-}
-
-suspend fun main(args: Array<String>) {
-
-    val port = System.getenv("PORT")?.toInt() ?: 50051
-
-    val channel = ManagedChannelBuilder.forAddress("localhost", port).usePlaintext().build()
-
-    val wordGuesser = OarunshivWordGuesser("five_letter_words.txt")
-    val client = GuessTheWordClient(channel)
-    client.authenticate()
-    var colors: Array<GuessResponse.Color>? = emptyArray()
-    while (colors != null) {
-        val wordToGuess = wordGuesser.nextBestGuess()
-        colors = client.guess(wordToGuess)?.toTypedArray()
-        if (colors == null || colors.count { it == GuessResponse.Color.GREEN } == 5) {
-            GuessTheWordClient.logger.info { "Found the word: $wordToGuess!!" }
-            GuessTheWordClient.logger.info { "Number of guesses: ${wordGuesser.guessedWords.size + 1} " }
-            colors = null
-        } else {
-            wordGuesser.updateGuessResponse(wordToGuess, colors)
-        }
     }
 }

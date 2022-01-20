@@ -1,8 +1,10 @@
-package com.oarunshiv.guess.client
+package com.oarunshiv.guess.client.com.oarunshiv.guess.client
 
 import com.oarunshiv.guess.GuessResponse
+import mu.KotlinLogging
 
 fun main() {
+    val logger = KotlinLogging.logger {}
     while (true) {
         val wordGuesser = OarunshivWordGuesser("five_letter_words.txt")
         while (true) {
@@ -20,8 +22,8 @@ fun main() {
                 }
             }
             if (colors.count { it == GuessResponse.Color.GREEN } == 5) {
-                GuessTheWordClient.logger.info { "Found the word: $wordToGuess!!" }
-                GuessTheWordClient.logger.info { "Number of guesses: ${wordGuesser.guessedWords.size + 1} " }
+                logger.info { "Found the word: $wordToGuess!!" }
+                logger.info { "Number of guesses: ${wordGuesser.guessedWords.size + 1} " }
                 return
             } else {
                 wordGuesser.updateGuessResponse(wordToGuess, colors.toTypedArray())

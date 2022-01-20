@@ -7,12 +7,19 @@ import com.google.protobuf.gradle.protoc
 plugins {
     idea
     application
+    java
     kotlin("jvm")
     id("com.google.protobuf")
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
 }
 
 apply(plugin = "org.jlleitschuh.gradle.ktlint")
+
+compileKotlin.destinationDir = compileJava.destinationDir
+
+java.sourceSets["main"].java {
+    srcDir("src/main/java")
+}
 
 dependencies {
     protobuf(project(":protos"))
