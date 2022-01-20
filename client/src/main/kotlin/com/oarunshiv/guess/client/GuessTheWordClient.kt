@@ -4,10 +4,8 @@ import com.oarunshiv.guess.AuthenticateResponse
 import com.oarunshiv.guess.GuessResponse
 import com.oarunshiv.guess.GuessTheWordGrpcKt
 import com.oarunshiv.guess.authenticateRequest
-import com.oarunshiv.guess.client.SampleWordGuesser
 import com.oarunshiv.guess.guessRequest
 import io.grpc.ManagedChannel
-import io.grpc.ManagedChannelBuilder
 import mu.KotlinLogging
 import java.io.Closeable
 import java.util.concurrent.TimeUnit
@@ -36,7 +34,11 @@ class GuessTheWordClient(private val channel: ManagedChannel) : Closeable {
             guess = wordToGuess
         }
         val response = stub.guess(request)
-        logger.info { "Received: { ${response.colorsList} }" }
+        logger.debug { "Received: { ${response.colorsList} }" }
+        if (response.status != GuessResponse.Status.VALID_REQUEST) {
+            logger.warn { "Got an exception from the server.!" }
+            throw IllegalArgumentException("Invalid input passed. Response obtained: $response")
+        }
         return response.takeIf { it.status == GuessResponse.Status.VALID_REQUEST }?.colorsList
     }
 

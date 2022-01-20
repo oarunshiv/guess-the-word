@@ -15,12 +15,6 @@ plugins {
 
 apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
-compileKotlin.destinationDir = compileJava.destinationDir
-
-java.sourceSets["main"].java {
-    srcDir("src/main/java")
-}
-
 dependencies {
     protobuf(project(":protos"))
 

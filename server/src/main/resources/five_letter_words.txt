@@ -1614,6 +1614,7 @@ shell
 shift
 shine
 shiny
+shire
 shock
 shoes
 shone
