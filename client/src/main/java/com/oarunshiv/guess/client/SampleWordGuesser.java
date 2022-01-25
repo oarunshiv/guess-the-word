@@ -1,7 +1,6 @@
 package com.oarunshiv.guess.client;
 
 import com.oarunshiv.guess.GuessResponse.Color;
-import com.oarunshiv.guess.client.WordGuesser;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,11 +8,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Sample class demonstrating how to implement WordGuesser.
+ * Sample class demonstrating how to implement WordGuesser in Java.
  */
 public class SampleWordGuesser implements WordGuesser {
   public SampleWordGuesser(String dictionaryFile) {
@@ -49,10 +49,9 @@ public class SampleWordGuesser implements WordGuesser {
     return words;
   }
 
-  @Override public int numberOfGuesses() {
+  public int numberOfGuesses() {
     return count;
   }
 
-  @Override public void updateGuessResponse(@NotNull String guessedWord, @NotNull Color[] result) {
-  }
+  @Override public void updateGuessResponse(@NotNull String guessedWord, @NotNull List<? extends Color> result) {}
 }

@@ -1407,6 +1407,7 @@ power
 prawn
 press
 price
+prick
 pride
 pried
 prime

@@ -4,48 +4,75 @@ option java_multiple_files = true;
 
 // GuessTheWord service definition.
 service GuessTheWord {
-  // Guess a five letter word.
+  // This API is used to authenticate a request and provides a session token for valid requests.
+  // SessionIds in the GuessRequest is used by the server to identify the word assigned to the user.
   rpc authenticate(AuthenticateRequest) returns (AuthenticateResponse) {}
+  // This Api is used to evaluate the 5 letter word assigned to the particular user. The response
+  // contains the status as well the result for valid words.
   rpc guess (GuessRequest) returns (GuessResponse) {}
 }
 
+// Request object used by the authenticate API.
 message AuthenticateRequest {
+  // User's Id registered with the service.
   string userId = 1;
+  // Password for the user.
   string password = 2;
 }
 
+// Response object returned by authenticate API.
 message AuthenticateResponse {
+  // Status of the request.
   enum Status {
+    // Request succeeded in authenticating and obtaining a sessionId for the user.
     SUCCESS = 0;
+    // Password doesn't match for the registered user.
     AUTHENTICATION_ERROR = 1;
+    // UserId not found.
     INVALID_USER = 2;
   }
   Status status = 1;
+  // A sessionId is generated for all authenticated users. SessionId is used in guessRequest
   string sessionId = 2;
   string exceptionMessage = 3;
 }
 
 // The request message containing the word user guessed.
 message GuessRequest {
+  // sessionId obtained from authenticate request and identifies the words assigned to the user.
   string sessionId = 1;
+  // The guessed word. Currently word should be a five letter valid dictionary word, else the server
+  // returns an ERROR response.
   string guess  = 2;
 }
 
 // The response message indicating the correctness of guessed word.
 message GuessResponse {
+  // Status of the request.
   enum Status {
+    // Request with valid sessionId and word sent.
     VALID_REQUEST = 0;
+    // The length of the guessed word doesn't match the length of the word set by the server.
     INPUT_WORD_SIZE_MISMATCH = 1;
+    // The guessed word is not a valid english word.
     NON_DICTIONARY_WORD = 2;
   }
+  // Indicates the correctness of a specific letter in the guessed word.
   enum Color {
+    // Indicates the letter is not in the actual word in any spot.
     BLACK = 0;
+    // Indicates that the letter is part of the word but in the wrong position in the guessed word.
     YELLOW = 1;
+    // Indicates that the letter is part of the word and in the correct position.
     GREEN = 2;
   }
+  // sessionId of the request.
   string sessionId = 1;
+  // The word guessed by the client.
   string guessed_word = 2;
   Status status = 3;
+  // This list contains colors which indicates the correctness of each letter in the corresponding
+  // index of the guessed word.
   repeated Color colors = 4;
   string exception_message = 5;
 }

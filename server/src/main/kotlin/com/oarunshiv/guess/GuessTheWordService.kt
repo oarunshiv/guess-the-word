@@ -46,6 +46,6 @@ class GuessTheWordService(
         val currentWord = sessionIdMap[request.sessionId]
             ?: throw StatusException(PERMISSION_DENIED.withDescription("Invalid sessionid"))
         println("[Server] Using $currentWord for ${request.sessionId}")
-        return guessEvaluator.guess(currentWord, request.guess).copy { sessionId = request.sessionId }
+        return guessEvaluator.evaluate(currentWord, request.guess).copy { sessionId = request.sessionId }
     }
 }

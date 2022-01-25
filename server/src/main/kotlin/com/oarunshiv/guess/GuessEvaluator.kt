@@ -1,11 +1,22 @@
 package com.oarunshiv.guess
 
+import com.oarunshiv.guess.GuessResponse.Color
 import com.oarunshiv.guess.GuessResponse.Color.BLACK
 import com.oarunshiv.guess.GuessResponse.Color.GREEN
 import com.oarunshiv.guess.GuessResponse.Color.YELLOW
 
+/**
+ * Evaluates guesses made by clients.
+ */
 class GuessEvaluator(private val dictionary: Dictionary) {
-    fun guess(actualWord: String, guessedWord: String): GuessResponse {
+    /**
+     * Evaluates the similarity between [actualWord] and [guessedWord].
+     * @param actualWord The word against which to evaluate the response.
+     * @param guessedWord The guessedWord to evaluate the similarity against the actual word.
+     * @return [GuessResponse]. If the word is a valid word, then a list with 5 [Color]s
+     * is added to the object.
+     */
+    fun evaluate(actualWord: String, guessedWord: String): GuessResponse {
         validateWord(actualWord, guessedWord).let { if (it != null) { return it } }
         val answer = mutableListOf(BLACK, BLACK, BLACK, BLACK, BLACK)
         val mappedWord = mutableMapOf<Char, MutableSet<Int>>()

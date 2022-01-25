@@ -12,5 +12,5 @@ val applicationModule =
     module {
         single(named("portNumber")) { System.getenv("PORT")?.toInt() ?: 50051 }
         single { GuessTheWordService(get(), get()) }
-        single { GuessTheWordServer() }
+        single { GuessTheWordServer(get(qualifier = named("portNumber")), get()) }
     }

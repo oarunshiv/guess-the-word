@@ -2,6 +2,9 @@ package com.oarunshiv.guess
 
 import org.koin.core.context.startKoin
 
+/**
+ * Main method that runs the [GuessTheWordServer].
+ */
 fun main() {
     val koin = startKoin {
         printLogger()
