@@ -11,7 +11,8 @@ class GuessTheWordService(
     private val dictionary: Dictionary
 ) : GuessTheWordGrpcKt.GuessTheWordCoroutineImplBase() {
 
-    private val sessionIdMap = ConcurrentHashMap<String, String>()
+    data class GuessTracker(val assignedWord: String, var guessCount: Int = 0)
+    private val activeSessions = ConcurrentHashMap<String, GuessTracker>()
     private val userIdMap = mapOf("testUser" to "testPassword")
     private val salt = Instant.now().epochSecond
 
@@ -25,7 +26,7 @@ class GuessTheWordService(
                 val sha256hex = MessageDigest.getInstance("SHA3-256")
                     .digest(saltedString.toByteArray())
                     .joinToString("") { "%02x".format(it) }
-                sessionIdMap[sha256hex] = dictionary.generateWord()
+                activeSessions[sha256hex] = GuessTracker(dictionary.generateWord())
                 return authenticateResponse {
                     status = AuthenticateResponse.Status.SUCCESS
                     sessionId = sha256hex
@@ -43,9 +44,25 @@ class GuessTheWordService(
     }
 
     override suspend fun guess(request: GuessRequest): GuessResponse {
-        val currentWord = sessionIdMap[request.sessionId]
+        val sessionId = request.sessionId
+        val guessTracker = activeSessions[sessionId]
             ?: throw StatusException(PERMISSION_DENIED.withDescription("Invalid sessionid"))
-        println("[Server] Using $currentWord for ${request.sessionId}")
-        return guessEvaluator.evaluate(currentWord, request.guess).copy { sessionId = request.sessionId }
+
+        val currentWord = guessTracker.assignedWord
+        println("$sessionId guessed $currentWord")
+        val guessResponse = guessEvaluator.evaluate(currentWord, request)
+        if (guessResponse.status == GuessResponse.Status.VALID_REQUEST) {
+            guessTracker.guessCount++
+            if (guessResponse.colorsList.count { it == GuessResponse.Color.GREEN } == 5) {
+                println(
+                    "------> " +
+                        "$sessionId found the word $currentWord in ${guessTracker.guessCount} attempts." +
+                        " <------"
+                )
+                activeSessions.remove(sessionId)
+            }
+            return guessResponse.copy { numberOfGuesses = guessTracker.guessCount }
+        }
+        return guessResponse
     }
 }

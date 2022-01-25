@@ -75,4 +75,6 @@ message GuessResponse {
   // index of the guessed word.
   repeated Color colors = 4;
   string exception_message = 5;
+  // Number of guesses made by the client for the current session.
+  int32 number_of_guesses = 6;
 }

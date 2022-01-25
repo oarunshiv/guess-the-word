@@ -77,7 +77,7 @@ class GuessEvaluatorTest : KoinTest {
         guessedWord: String,
         expectedResponse: GuessResponse
     ) {
-        val response = guessEvaluator.evaluate(actualWord, guessedWord)
+        val response = guessEvaluator.evaluate(actualWord, guessRequest { guess = guessedWord })
         assertEquals(expectedResponse, response)
     }
 }

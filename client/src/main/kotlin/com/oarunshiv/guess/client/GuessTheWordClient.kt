@@ -42,18 +42,12 @@ class GuessTheWordClient(private val channel: ManagedChannel) : Closeable {
      * @return List of colors. Each color represents the correctness of the letter in corresponding
      * index of the guessed word.
      */
-    suspend fun guess(wordToGuess: String): List<GuessResponse.Color> {
+    suspend fun guess(wordToGuess: String): GuessResponse {
         val request = guessRequest {
             sessionId = currentSessionId
             guess = wordToGuess
         }
-        val response = stub.guess(request)
-        if (response.status == GuessResponse.Status.VALID_REQUEST) {
-            return response.colorsList
-        } else {
-            logger.warn { "Server couldn't process '$wordToGuess' properly." }
-            throw IllegalArgumentException("Invalid input passed. Response obtained: $response")
-        }
+        return stub.guess(request)
     }
 
     override fun close() {

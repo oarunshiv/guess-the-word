@@ -18,10 +18,16 @@ suspend fun main(args: Array<String>) {
     var colors: List<GuessResponse.Color>? = emptyList()
     while (colors != null) {
         val wordToGuess = wordGuesser.nextBestGuess()
-        colors = client.guess(wordToGuess)
+        val response = client.guess(wordToGuess)
+        if (response.status == GuessResponse.Status.VALID_REQUEST) {
+            colors = response.colorsList
+        } else {
+            GuessTheWordClient.logger.warn { "Server couldn't process '$wordToGuess' properly." }
+            throw IllegalArgumentException("Invalid input passed. Response obtained: $response")
+        }
         if (colors.count { it == GuessResponse.Color.GREEN } == 5) {
             GuessTheWordClient.logger.info { "Found the word: $wordToGuess!!" }
-            GuessTheWordClient.logger.info { "Number of guesses: ${wordGuesser.numberOfGuesses() + 1} " }
+            GuessTheWordClient.logger.info { "Number of guesses: ${response.numberOfGuesses} " }
             colors = null
         } else {
             wordGuesser.updateGuessResponse(wordToGuess, colors)

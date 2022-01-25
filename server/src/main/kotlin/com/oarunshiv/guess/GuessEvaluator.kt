@@ -16,8 +16,9 @@ class GuessEvaluator(private val dictionary: Dictionary) {
      * @return [GuessResponse]. If the word is a valid word, then a list with 5 [Color]s
      * is added to the object.
      */
-    fun evaluate(actualWord: String, guessedWord: String): GuessResponse {
-        validateWord(actualWord, guessedWord).let { if (it != null) { return it } }
+    fun evaluate(actualWord: String, request: GuessRequest): GuessResponse {
+        validateWord(actualWord, request).let { if (it != null) { return it } }
+        val guessedWord = request.guess
         val answer = mutableListOf(BLACK, BLACK, BLACK, BLACK, BLACK)
         val mappedWord = mutableMapOf<Char, MutableSet<Int>>()
         actualWord.forEachIndexed { i, c ->
@@ -42,15 +43,18 @@ class GuessEvaluator(private val dictionary: Dictionary) {
             status = GuessResponse.Status.VALID_REQUEST
             this.guessedWord = guessedWord
             colors.addAll(answer)
+            sessionId = request.sessionId
         }
     }
 
-    private fun validateWord(actual: String, guessed: String): GuessResponse? {
+    private fun validateWord(actual: String, request: GuessRequest): GuessResponse? {
+        val guessed = request.guess
         if (actual.length != guessed.length) {
             return guessResponse {
                 status = GuessResponse.Status.INPUT_WORD_SIZE_MISMATCH
                 exceptionMessage = guessed + SIZE_MISMATCH_MESSAGE
                 guessedWord = guessed
+                sessionId = request.sessionId
             }
         }
         if (!dictionary.isValidWord(guessed)) {
@@ -58,6 +62,7 @@ class GuessEvaluator(private val dictionary: Dictionary) {
                 status = GuessResponse.Status.NON_DICTIONARY_WORD
                 exceptionMessage = guessed + NON_DICTIONARY_WORD_MESSAGE
                 guessedWord = guessed
+                sessionId = request.sessionId
             }
         }
         return null
