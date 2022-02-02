@@ -1,24 +1,16 @@
-//
-//dependencies {
-//    testImplementation(kotlin("test"))
-//}
-//
-//application {
-//    mainClass.set("MainKt")
-//}
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.31" apply false
+    kotlin("jvm") version "1.6.0" apply false
     id("com.google.protobuf") version "0.8.18" apply false
 }
 
 ext["grpcVersion"] = "1.39.0" // need to wait for grpc kotlin to move past this
 ext["grpcKotlinVersion"] = "1.2.0" // CURRENT_GRPC_KOTLIN_VERSION
 ext["protobufVersion"] = "3.19.1"
-ext["coroutinesVersion"] = "1.5.2"
+ext["coroutinesVersion"] = "1.6.0"
 
 subprojects {
 

@@ -30,6 +30,9 @@ dependencies {
     testImplementation("io.insert-koin:koin-test:3.1.5")
     testImplementation("io.insert-koin:koin-test-junit5:3.1.5")
 
+    // Kotlin CLI command line parser.
+    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.4")
+
     // Use the Kotlin test library.
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")

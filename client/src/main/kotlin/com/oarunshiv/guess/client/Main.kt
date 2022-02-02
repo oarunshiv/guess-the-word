@@ -2,14 +2,23 @@ package com.oarunshiv.guess.client
 
 import com.oarunshiv.guess.GuessResponse
 import io.grpc.ManagedChannelBuilder
+import kotlinx.cli.ArgParser
+import kotlinx.cli.ArgType
+import kotlinx.cli.default
 
 /**
  * Main function that is used runs [GuessTheWordClient] to guess and find the guess-word set by the
  * server.
  */
 suspend fun main(args: Array<String>) {
+    val argParser = ArgParser("guess-the-word-client")
+    val port by argParser.option(
+        ArgType.Int,
+        shortName = "p",
+        description = "The port number where the server connections are accepted."
+    ).default(50051)
+    argParser.parse(args)
 
-    val port = System.getenv("PORT")?.toInt() ?: 50051
     val channel = ManagedChannelBuilder.forAddress("localhost", port).usePlaintext().build()
 
     // Use your custom WordGuesserHere.

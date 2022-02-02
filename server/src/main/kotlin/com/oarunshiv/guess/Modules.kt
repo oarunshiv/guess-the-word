@@ -8,9 +8,9 @@ fun wordGuesserModule(dictionaryFile: String) = module {
     single { GuessEvaluator(get()) }
 }
 
-val applicationModule =
+fun applicationModule(port: Int) =
     module {
-        single(named("portNumber")) { System.getenv("PORT")?.toInt() ?: 50051 }
+        single(named("portNumber")) { port }
         single { GuessTheWordService(get(), get()) }
         single { GuessTheWordServer(get(qualifier = named("portNumber")), get()) }
     }
